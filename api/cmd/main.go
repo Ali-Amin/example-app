@@ -30,6 +30,15 @@ func main() {
 func routes(database interfaces.DB) http.Handler {
 	productService := services.NewProductService(database)
 	router := chi.NewRouter()
+
+	r.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"https://*", "http://*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: false,
+		MaxAge:           300, // Maximum value not ignored by any of major browsers
+	}))
 	router.Get("/health", func(w http.ResponseWriter, _ *http.Request) {
 		message := "Healthy"
 		w.Write([]byte(message))
